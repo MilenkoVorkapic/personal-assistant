@@ -1,0 +1,21 @@
+{
+  "name": "speech-color-changer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "front": "http-server ./front",
+    "back": "node backend/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@cliqz/adblocker-puppeteer": "^1.18.8",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "http-server": "^0.12.3",
+    "node-fetch": "^2.6.1",
+    "puppeteer": "^5.5.0"
+  }
+}
