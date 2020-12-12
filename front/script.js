@@ -47,6 +47,7 @@ recognition.onresult = function (event) {
     }
   } else {
     if (dataArray[0].toLowerCase() === "youtube") {
+      playOk();
       fetch(
         "http://localhost:3000/youtube?text=" + dataArray.slice(1).join("_")
       );
@@ -72,10 +73,13 @@ function greetUser() {
   const sounds = [
     "sounds/encore_du_travail.wav",
     "sounds/pardon.wav",
-    "sounds/oui_messire.wav",
     "sounds/qu_y_a_t_t_il.wav",
   ];
   playSound(sounds[Math.floor(Math.random() * sounds.length)]);
+}
+
+function playOk() {
+  playSound("sounds/oui_messire.wav");
 }
 
 function playSound(path) {
@@ -87,14 +91,11 @@ function playSound(path) {
 }
 
 function showCommands(container) {
-  console.log(commands);
-
   var commandsHTML = "";
 
   commands.forEach(function (v) {
     commandsHTML += "<span> " + v + " </span>";
   });
-  console.log(commands);
 
   container.innerHTML = "Say a command. Try " + commandsHTML + ".";
 }
