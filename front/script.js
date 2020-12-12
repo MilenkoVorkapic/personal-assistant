@@ -3,7 +3,7 @@ var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
 var SpeechRecognitionEvent =
   SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
 
-var commands = ["pizza", "youtube"];
+var commands = ["youtube"];
 var grammar =
   "#JSGF V1.0; grammar commands; public <command> = " +
   commands.join(" | ") +
@@ -21,11 +21,9 @@ recognition.maxAlternatives = 1;
 var diagnostic = document.querySelector(".output");
 var hints = document.querySelector(".hints");
 
-var commandsHTML = "";
-commands.forEach(function (v) {
-  commandsHTML += "<span> " + v + " </span>";
-});
-hints.innerHTML = "Say a command. Try " + commandsHTML + ".";
+let wakeUp = false;
+
+showSayHello(hints);
 
 window.addEventListener("load", function (event) {
   recognition.start();
@@ -41,8 +39,20 @@ recognition.onresult = function (event) {
     " Confidence: " +
     event.results[0][0].confidence;
   const dataArray = data.split(" ");
-  if (dataArray[0].toLowerCase() === "youtube") {
-    fetch("http://localhost:3000/youtube?text=" + dataArray.slice(1).join("_"));
+  if (wakeUp === false) {
+    if (dataArray[0].toLowerCase() === "hello") {
+      wakeUp = true;
+      greetUser();
+      showCommands(hints);
+    }
+  } else {
+    if (dataArray[0].toLowerCase() === "youtube") {
+      fetch(
+        "http://localhost:3000/youtube?text=" + dataArray.slice(1).join("_")
+      );
+      wakeUp = false;
+      showSayHello(hints);
+    }
   }
 };
 
@@ -57,3 +67,38 @@ recognition.onnomatch = function (event) {
 recognition.onerror = function (event) {
   diagnostic.textContent = "Error occurred in recognition: " + event.error;
 };
+
+function greetUser() {
+  const sounds = [
+    "sounds/encore_du_travail.wav",
+    "sounds/pardon.wav",
+    "sounds/oui_messire.wav",
+    "sounds/qu_y_a_t_t_il.wav",
+  ];
+  playSound(sounds[Math.floor(Math.random() * sounds.length)]);
+}
+
+function playSound(path) {
+  if (typeof window.Audio === "function") {
+    var audioElem = new Audio();
+    audioElem.src = path;
+    audioElem.play();
+  }
+}
+
+function showCommands(container) {
+  console.log(commands);
+
+  var commandsHTML = "";
+
+  commands.forEach(function (v) {
+    commandsHTML += "<span> " + v + " </span>";
+  });
+  console.log(commands);
+
+  container.innerHTML = "Say a command. Try " + commandsHTML + ".";
+}
+
+function showSayHello(container) {
+  container.innerHTML = "Say Hello!";
+}
