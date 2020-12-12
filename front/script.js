@@ -28,6 +28,6 @@ recognition.onresult = function (event) {
   }
 
   if (success) {
-    wakeUp = true;
+    wakeUp = !wakeUp;
   }
 };
